@@ -3,7 +3,7 @@
 by Liuxiu </br>
 用于测试学生电子竞技潜能 </br>
 
-<font color=#000000 size=8>LiuXiu Make in Easy Programming Language</font>
+<font color=#FF0000 size=8>LiuXiu Make in Easy Programming Language</font>
 
 **电子竞技选手能力测试，用于Pub电子竞技俱乐部2018年12月8日线下活动** </br>
 
