@@ -1,7 +1,7 @@
 # eSport-Test
 
 by Liuxiu </br>
-用于测试学生电子竞技潜能 </br>
+用于测试学生电子竞技潜能
 
 <font color=#FF0000 size=8>LiuXiu Make in Easy Programming Language</font>
 
