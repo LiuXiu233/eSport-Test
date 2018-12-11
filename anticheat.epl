@@ -1,0 +1,118 @@
+.版本 2
+
+.程序集 程序集1
+
+.子程序 _启动子程序, 整数型, , 本子程序在程序启动后最先执行
+
+标准输出 (, “职业选手能力测试 Anti-Cheat 反作弊系统.” ＋ #换行符)
+标准输出 (, “系统初始化完成!” ＋ #换行符)
+.判断循环首 (真)
+    .如果真 (进程_是否存在 (“test.exe”) ＝ 假)
+        .如果真 (读配置项 (取运行目录 () ＋ “\anticheat.ini”, “anticheat”, “activate”, “false”) ＝ “true”)
+            标准输出 (, “反作弊系统侦测到用户 ” ＋ 读配置项 (取运行目录 () ＋ “\anticheat.ini”, “anticheat”, “username”, “NAME”) ＋ “ 测试时程序出现故障，恢复中...” ＋ #换行符)
+            运行 (取运行目录 () ＋ “\test.exe”, 假, )
+        .如果真结束
+
+    .如果真结束
+    延时 (1000)
+.判断循环尾 ()
+返回 (0)  ' 可以根据您的需要返回任意数值
+
+
+.子程序 进程_是否存在, 逻辑型, 公开, 判断指定进程是否存在(此判断与进程其它信息无关联)(存在返回真，不存在或失败返回假)
+.参数 进程名, 文本型, , 欲检测的进程名
+.参数 是否区分大小写, 逻辑型, 可空, 默认为不区分,真=区分
+.局部变量 信息, 精易_进程信息列表
+.局部变量 进程快照, 整数型
+.局部变量 进程句柄, 整数型
+
+进程快照 ＝ CreateToolhelp32Snapshot (15, 0)
+.如果真 (进程快照 ＝ 0)
+    返回 (假)
+.如果真结束
+信息.dwSize ＝ 1024
+进程句柄 ＝ Process32First (进程快照, 信息)
+.判断开始 (是否区分大小写)
+    .判断循环首 (进程句柄 ≠ 0)
+        .判断开始 (进程名 ＝ 到文本 (信息.进程名称))
+            CloseHandle (进程快照)
+            返回 (真)
+        .默认
+            进程句柄 ＝ Process32Next (进程快照, 信息)
+        .判断结束
+
+    .判断循环尾 ()
+.默认
+    进程名 ＝ 到小写 (进程名)
+    .判断循环首 (进程句柄 ≠ 0)
+        .判断开始 (进程名 ＝ 到小写 (到文本 (信息.进程名称)))
+            CloseHandle (进程快照)
+            返回 (真)
+        .默认
+            进程句柄 ＝ Process32Next (进程快照, 信息)
+        .判断结束
+
+    .判断循环尾 ()
+.判断结束
+CloseHandle (进程快照)
+返回 (假)
+
+.版本 2
+
+.数据类型 精易_进程信息列表, 公开
+    .成员 dwSize, 整数型, , , 1
+    .成员 cntUsage, 整数型, , , 2
+    .成员 进程ID, 整数型, , , 3
+    .成员 th32DefaultHeapID, 整数型, , , 4
+    .成员 th32ModuleID, 整数型, , , 5
+    .成员 cntThreads, 整数型, , , 6
+    .成员 th32ParentProcessID, 整数型, , , 7
+    .成员 pcPriClassBase, 整数型, , , 8
+    .成员 dwFlags, 整数型, , , 9
+    .成员 进程名称, 字节型, , "256", 10
+
+	
+.版本 2
+
+.DLL命令 Process32Next, 整数型, , "Process32Next", 公开, 取下一个进程
+    .参数 h, 整数型
+    .参数 p, 精易_进程信息列表
+
+.DLL命令 关闭内核对象_, 整数型, "kernel32.dll", "CloseHandle", 公开, $(b)非零表示成功，零表示失败
+    .参数 对象句柄, 整数型, , hObject，欲关闭的一个对象的句柄
+
+.DLL命令 CloseHandle, 逻辑型, "kernel32", "CloseHandle", 公开, 关闭一个内核对象。其中包括文件、文件映射、进程、线程、安全和同步对象等。涉及文件处理时，这个函数通常与vb的close命令相似。应尽可能的使用close，因为它支持vb的差错控制。注意这个函数使用的文件句柄与vb的文件编号是完全不同的  非零表示成功，零表示失败。会设置GetLastError
+    .参数 对象句柄, 整数型, , 欲关闭的一个对象的句柄;
+
+.DLL命令 Process32First, 整数型, , "Process32First", 公开, 取第一个进程
+    .参数 h, 整数型
+    .参数 p, 精易_进程信息列表
+
+.DLL命令 CreateToolhelp32Snapshot, 整数型, , "CreateToolhelp32Snapshot", 公开, 创建进程快照
+    .参数 falg, 整数型
+    .参数 id, 整数型
+
+.DLL命令 CreateTimerQueueTimer, 逻辑型, "kernel32", "CreateTimerQueueTimer", 公开, 控件_时钟
+    .参数 phNewTimer, 整数型, 传址
+    .参数 TimerQueue, 整数型
+    .参数 Callback, 整数型, , 时钟回调
+    .参数 Parameter, 整数型, , 传递给时钟回调的参数
+    .参数 DueTime, 整数型, , 首次触发时钟的延时
+    .参数 Period, 整数型, , 时钟周期
+    .参数 Flags, 整数型
+
+.DLL命令 CreateTimerQueue, 整数型, "kernel32.dll", "CreateTimerQueue", 公开, 控件_时钟
+
+.DLL命令 DeleteTimerQueueTimer, 逻辑型, "kernel32.dll", "DeleteTimerQueueTimer", 公开, 控件_时钟
+    .参数 TimerQueue, 整数型
+    .参数 Timer, 整数型
+    .参数 CompletionEvent, 整数型
+
+.DLL命令 DeleteTimerQueue, 逻辑型, "kernel32.dll", "DeleteTimerQueue", 公开, 控件_时钟
+    .参数 TimerQueue, 整数型
+
+.DLL命令 ChangeTimerQueueTimer, 逻辑型, "kernel32.dll", "ChangeTimerQueueTimer", 公开, 控件_时钟
+    .参数 TimerQueue, 整数型
+    .参数 Timer, 整数型
+    .参数 DueTime, 整数型
+    .参数 Period, 整数型
