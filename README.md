@@ -11,4 +11,4 @@ by Liuxiu </br>
 
 以上 Pub电子竞技俱乐部经理：刘秀 于 2018年12月6日
 
-[to my blog](https://liuxiu.com)
+[to my blog](https://liuxiu233.com)
